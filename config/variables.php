@@ -1,0 +1,33 @@
+<?php
+// Variables
+return [
+  "creatorName" => "UPG KKP RI",
+  "creatorUrl" => "https://upg.kkp.go.id",
+  "templateName" => "UPG KKP",
+  "templateSuffix" => "Unit Pengendalian Gratifikasi KKP RI",
+  "templateVersion" => "2.0.0",
+  "templateFree" => false,
+  "templateDescription" => "Beranda digital Unit Pengendalian Gratifikasi (UPG) Kementerian Kelautan dan Perikanan Republik Indonesia",
+  "templateKeyword" => "upg kkp, pengendalian gratifikasi, unit pengendalian gratifikasi, gol kpk, kkp",
+  "licenseUrl" => "",
+  "livePreview" => "",
+  "productPage" => "",
+  "support" => "",
+  "moreThemes" => "",
+  "ogTitle" => "UPG KKP - Unit Pengendalian Gratifikasi Kementerian Kelautan dan Perikanan",
+  "ogImage" => "",
+  "ogType" => "website",
+  "documentation" => "",
+  "generator" => "",
+  "changelog" => "",
+  "repository" => "",
+  "gitRepo" => "",
+  "gitRepoAccess" => "",
+  "githubFreeUrl" => "",
+  "facebookUrl" => "",
+  "twitterUrl" => "https://twitter.com/upg_kkp",
+  "youtubeUrl" => "https://www.youtube.com/channel/UC97R16V2eiaVHaOvOy_kzKw",
+  "githubUrl" => "",
+  "dribbbleUrl" => "",
+  "instagramUrl" => "https://instagram.com/upg_kkp"
+];

@@ -1,0 +1,46 @@
+{
+  "menu": [
+    {
+      "url": "/admin",
+      "name": "Dashboard",
+      "icon": "menu-icon icon-base ti tabler-smart-home",
+      "slug": "admin.dashboard"
+    },
+    {
+      "url": "/admin/articles",
+      "name": "Artikel",
+      "icon": "menu-icon icon-base ti tabler-news",
+      "slug": "admin.articles"
+    },
+    {
+      "url": "/admin/faqs",
+      "name": "FAQ & Kasus",
+      "icon": "menu-icon icon-base ti tabler-help-circle",
+      "slug": "admin.faqs"
+    },
+    {
+      "url": "/admin/downloads",
+      "name": "Unduh",
+      "icon": "menu-icon icon-base ti tabler-download",
+      "slug": "admin.downloads"
+    },
+    {
+      "url": "/admin/media",
+      "name": "Media",
+      "icon": "menu-icon icon-base ti tabler-photo-video",
+      "slug": "admin.media"
+    },
+    {
+      "url": "/admin/inquiries",
+      "name": "Konsultasi",
+      "icon": "menu-icon icon-base ti tabler-mail",
+      "slug": "admin.inquiries"
+    },
+    {
+      "url": "/admin/settings",
+      "name": "Pengaturan",
+      "icon": "menu-icon icon-base ti tabler-settings",
+      "slug": "admin.settings"
+    }
+  ]
+}

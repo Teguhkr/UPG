@@ -1,0 +1,28 @@
+.upg-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.375rem;
+}
+
+.upg-prose table {
+  width: 100%;
+  margin-bottom: 1rem;
+  border-collapse: collapse;
+}
+
+.upg-prose table td,
+.upg-prose table th {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--bs-border-color);
+}
+
+@keyframes upgPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+.upg-gol-pulse {
+  animation: upgPulse 2s ease-in-out infinite;
+}
+
