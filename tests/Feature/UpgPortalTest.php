@@ -2,7 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Article;
+use App\Models\Category;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class UpgPortalTest extends TestCase
@@ -57,6 +61,55 @@ class UpgPortalTest extends TestCase
         foreach ($adminRoutes as $uri) {
             $response = $this->actingAs($admin)->get($uri);
             $response->assertStatus(200, "Failed asserting 200 for admin route {$uri}");
+        }
+    }
+
+    public function test_article_cover_image_is_displayed_on_detail_page(): void
+    {
+        Storage::fake('public');
+
+        $admin = User::where('username', 'adminupg')->firstOrFail();
+        $category = Category::where('type', 'article')->firstOrFail();
+        $slug = 'test-cover-image-' . uniqid();
+
+        try {
+            $this->actingAs($admin)->post('/admin/articles', [
+                'category_id' => $category->id,
+                'title' => 'Artikel Uji Gambar Sampul',
+                'slug' => $slug,
+                'content' => '<p>Konten uji.</p>',
+                'is_published' => '1',
+                'featured_image_file' => UploadedFile::fake()->image('cover.jpg', 800, 600),
+            ])->assertRedirect('/admin/articles');
+
+            $article = Article::where('slug', $slug)->firstOrFail();
+            $this->assertNotNull($article->featured_image);
+            Storage::disk('public')->assertExists($article->featured_image);
+
+            $this->get('/artikel/' . $article->slug)
+                ->assertStatus(200)
+                ->assertSee($article->image_url, false);
+
+            $oldImage = $article->featured_image;
+            $this->actingAs($admin)->put('/admin/articles/' . $article->id, [
+                'category_id' => $category->id,
+                'title' => 'Artikel Uji Gambar Sampul Edited',
+                'slug' => $slug,
+                'content' => '<p>Konten uji diperbarui.</p>',
+                'is_published' => '1',
+                'featured_image_file' => UploadedFile::fake()->image('cover-new.jpg', 800, 600),
+            ])->assertRedirect('/admin/articles');
+
+            $article->refresh();
+            $this->assertNotSame($oldImage, $article->featured_image);
+            Storage::disk('public')->assertMissing($oldImage);
+            Storage::disk('public')->assertExists($article->featured_image);
+
+            $this->get('/artikel/' . $article->slug)
+                ->assertStatus(200)
+                ->assertSee($article->image_url, false);
+        } finally {
+            Article::where('slug', $slug)->delete();
         }
     }
 }

@@ -24,6 +24,11 @@
     <div class="card shadow-sm">
       <div class="card-body p-6 p-md-8">
         <h2 class="fw-bold mb-4">{{ $article->title }}</h2>
+        @if($article->image_url)
+          <div class="mb-5">
+            <img src="{{ $article->image_url }}" alt="{{ $article->title }}" class="img-fluid rounded shadow-sm w-100 object-fit-cover" style="max-height: 460px;" />
+          </div>
+        @endif
         <div class="upg-prose">
           {!! $article->content !!}
         </div>

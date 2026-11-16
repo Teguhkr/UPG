@@ -32,6 +32,12 @@
               <span><i class="icon-base ti tabler-eye me-1"></i>{{ number_format($article->hits) }} kali dibaca</span>
             </div>
 
+            @if($article->image_url)
+              <div class="mb-5">
+                <img src="{{ $article->image_url }}" alt="{{ $article->title }}" class="img-fluid rounded shadow-sm w-100 object-fit-cover" style="max-height: 460px;" />
+              </div>
+            @endif
+
             <div class="upg-prose">
               {!! $article->content !!}
             </div>
