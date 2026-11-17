@@ -36,10 +36,8 @@
 </div>
 
 <!-- Footer: Start -->
-<footer class="landing-footer bg-body footer-text">
+<footer class="landing-footer footer-text">
   <div class="footer-top position-relative overflow-hidden z-1">
-    <img src="{{ asset('assets/img/front-pages/backgrounds/footer-bg.png') }}" alt="footer bg"
-      class="footer-bg banner-bg-img z-n1" />
     <div class="container">
       <div class="row gx-0 gy-6 g-lg-8">
         <div class="col-lg-3 col-md-6">

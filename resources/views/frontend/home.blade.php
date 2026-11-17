@@ -15,8 +15,6 @@
 <div data-bs-spy="scroll" class="scrollspy-example">
   <!-- Hero Section -->
   <section id="landingHero" class="section-py landing-hero position-relative">
-    <img src="{{ asset('assets/img/front-pages/backgrounds/hero-bg.png') }}" alt="hero background"
-      class="position-absolute top-0 start-50 translate-middle-x object-fit-cover w-100 h-100" data-speed="1" />
     <div class="container position-relative">
       <div class="row align-items-center gy-6 py-4">
         <div class="col-lg-7 text-center text-lg-start">
