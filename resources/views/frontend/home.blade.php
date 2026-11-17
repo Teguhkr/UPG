@@ -18,12 +18,20 @@
     <div class="container position-relative">
       <div class="row align-items-center gy-6 py-4">
         <div class="col-lg-7 text-center text-lg-start">
+          @php
+            $heroTitle = $siteSettings['hero_title'] ?? 'Wujudkan Integritas Kementerian Kelautan dan Perikanan Bebas Gratifikasi';
+            $heroTitleHighlight = 'Kelautan dan Perikanan Bebas Gratifikasi';
+          @endphp
           <span class="badge bg-label-primary mb-3 px-3 py-2">
             <i class="icon-base ti tabler-shield-check me-1"></i>
             {{ $siteSettings['site_tagline'] ?? 'Unit Pengendalian Gratifikasi KKP RI' }}
           </span>
-          <h1 class="text-primary hero-title display-6 fw-extrabold mb-4">
-            {{ $siteSettings['hero_title'] ?? 'Wujudkan Integritas Kementerian Kelautan dan Perikanan Bebas Gratifikasi' }}
+          <h1 class="text-black hero-title display-6 fw-extrabold mb-4">
+            @if(str_contains($heroTitle, $heroTitleHighlight))
+              {{ str_replace($heroTitleHighlight, '', $heroTitle) }}<span class="hero-title-highlight">{{ $heroTitleHighlight }}</span>
+            @else
+              {{ $heroTitle }}
+            @endif
           </h1>
           <p class="hero-sub-title h6 fw-normal text-body mb-6">
             {{ $siteSettings['hero_subtitle'] ?? 'Portal resmi Unit Pengendalian Gratifikasi (UPG) KKP sebagai pusat informasi, edukasi, konsultasi, dan pelaporan gratifikasi.' }}

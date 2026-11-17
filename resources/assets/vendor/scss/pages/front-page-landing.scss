@@ -1,10 +1,10 @@
 /* Landing
 ******************************************************************************* */
 
-@import "../_bootstrap-extended/include";
+@import '../_bootstrap-extended/include';
 
 // Variables
-@import "./front/variables";
+@import './front/variables';
 
 .section-py {
   padding-block: 6.25rem;
@@ -21,16 +21,18 @@
 
 /* Hero */
 .landing-hero {
-  --#{$prefix}hero-bg: linear-gradient(138.18deg, #eae8fd 0%, #fce5e6 94.44%);
   @include border-radius(0 0 3.5rem 3.5rem);
-  background: var(--#{$prefix}hero-bg);
+  background-image: url('/assets/img/backgrounds/kkp.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   padding-block-start: 10.2rem;
   &::after {
     position: absolute;
     z-index: -1;
     background-color: var(--#{$prefix}paper-bg);
     block-size: 100%;
-    content: "";
+    content: '';
     inline-size: 100%;
     inset-block-start: 0;
     inset-inline-start: 0;
@@ -44,14 +46,19 @@
   }
 
   .hero-title {
-    animation: shine 2s ease-in-out infinite alternate;
-    background: linear-gradient(to right, #28c76f 0%, #5a4aff 47.92%, #ff3739 100%);
-    background-clip: text;
-    background-size: 200% auto;
-    color: var(--#{$prefix}heading-color);
+    background: none !important;
+    background-clip: border-box !important;
+    color: #000 !important;
     font-size: calc(1.3875rem + 1.65vw);
     line-height: 1.2;
-    -webkit-text-fill-color: transparent;
+    -webkit-text-fill-color: #000 !important;
+
+    .hero-title-highlight {
+      background: none !important;
+      color: #b3262d !important;
+      -webkit-text-fill-color: #b3262d !important;
+    }
+
     @include media-breakpoint-up(xl) {
       font-size: 2.625rem;
     }
@@ -75,7 +82,7 @@
       margin-block: 0;
       margin-inline: auto;
       transform-style: preserve-3d;
-      transition: all .1s;
+      transition: all 0.1s;
       will-change: transform;
       img {
         inline-size: 100%;
@@ -126,7 +133,7 @@
       display: none;
     }
     .swiper-slide {
-      padding: .8125rem;
+      padding: 0.8125rem;
       block-size: auto;
     }
     .client-logo {
@@ -189,7 +196,7 @@
 .landing-pricing {
   @include border-radius($section-radius);
   .pricing-plans-item {
-    inset-block-end: -.5rem;
+    inset-block-end: -0.5rem;
     inset-inline-end: -56%;
     @include media-breakpoint-down(md) {
       inset-block-end: 1rem;
@@ -250,7 +257,9 @@
   .contact-img-box {
     @include border-radius(3.75rem var(--#{$prefix}border-radius) var(--#{$prefix}border-radius));
     :dir(rtl) & {
-      @include border-radius(var(--#{$prefix}border-radius) 3.75rem var(--#{$prefix}border-radius) var(--#{$prefix}border-radius));
+      @include border-radius(
+        var(--#{$prefix}border-radius) 3.75rem var(--#{$prefix}border-radius) var(--#{$prefix}border-radius)
+      );
     }
     .contact-img {
       @include border-radius(3.75rem var(--#{$prefix}border-radius) var(--#{$prefix}border-radius));
@@ -261,7 +270,6 @@
     }
   }
 }
-
 
 /* Dark style */
 @if $enable-dark-mode {
