@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Eselonering;
+use App\Models\ListSatker;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,11 +15,32 @@ use Illuminate\View\View;
 
 class UserController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $users = User::orderBy('id')->paginate(15);
+        $search = trim($request->input('search', ''));
+        $usersQuery = User::with('satker.eselon');
 
-        return view('admin.users.index', compact('users'));
+        if ($search !== '') {
+            $usersQuery->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('username', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('role', 'like', "%{$search}%")
+                    ->orWhereHas('satker', function ($satkerQuery) use ($search) {
+                        $satkerQuery->where('list_satker', 'like', "%{$search}%")
+                            ->orWhereHas('eselon', function ($eselonQuery) use ($search) {
+                                $eselonQuery->where('nama_eselon', 'like', "%{$search}%")
+                                    ->orWhere('eselonering', 'like', "%{$search}%");
+                            });
+                    });
+            });
+        }
+
+        $users = $usersQuery->orderBy('id')->paginate(15)->withQueryString();
+        $eseloneringRows = Eselonering::orderBy('no_urut')->get();
+        $satkers = ListSatker::orderBy('list_satker')->get(['id', 'list_satker', 'eselonering']);
+
+        return view('admin.users.index', compact('users', 'eseloneringRows', 'satkers', 'search'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -27,6 +50,12 @@ class UserController extends Controller
             'username' => ['required', 'string', 'max:80', 'unique:users,username'],
             'email' => ['required', 'email', 'max:150', 'unique:users,email'],
             'role' => ['required', 'in:super_admin,editor,operator'],
+            'eselonering_id' => ['required', 'integer', Rule::exists('eselonering', 'id')],
+            'satker_id' => [
+                'required',
+                'integer',
+                Rule::exists('list_satker', 'id')->where('eselonering', $request->input('eselonering_id')),
+            ],
             'password' => ['required', 'string', 'min:6'],
         ]);
 
@@ -35,6 +64,7 @@ class UserController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'role' => $data['role'],
+            'satker_id' => $data['satker_id'],
             'password' => Hash::make($data['password']),
             'is_active' => $request->boolean('is_active', true),
         ]);
@@ -50,6 +80,12 @@ class UserController extends Controller
             'username' => ['required', 'string', 'max:80', Rule::unique('users', 'username')->ignore($user->id)],
             'email' => ['required', 'email', 'max:150', Rule::unique('users', 'email')->ignore($user->id)],
             'role' => ['required', 'in:super_admin,editor,operator'],
+            'eselonering_id' => ['required', 'integer', Rule::exists('eselonering', 'id')],
+            'satker_id' => [
+                'required',
+                'integer',
+                Rule::exists('list_satker', 'id')->where('eselonering', $request->input('eselonering_id')),
+            ],
             'password' => ['nullable', 'string', 'min:6'],
         ]);
 
@@ -58,6 +94,7 @@ class UserController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'role' => $data['role'],
+            'satker_id' => $data['satker_id'],
             'is_active' => $request->boolean('is_active'),
         ];
 
