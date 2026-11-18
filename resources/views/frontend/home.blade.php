@@ -102,7 +102,7 @@
                   </span>
                 </div>
                 <h5 class="card-title mb-2">{{ $item->title }}</h5>
-                <p class="card-text text-body-secondary small flex-grow-1">{{ \Illuminate\Support\Str::limit($item->excerpt, 110) }}</p>
+                <p class="card-text text-body-secondary small grow">{{ \Illuminate\Support\Str::limit($item->excerpt, 110) }}</p>
                 <a href="{{ route('articles.show', $item->slug) }}" class="btn btn-sm btn-label-primary mt-3 align-self-start">
                   Baca Selengkapnya <i class="icon-base ti tabler-arrow-right ms-1"></i>
                 </a>
@@ -152,7 +152,7 @@
                     {{ $article->title }}
                   </a>
                 </h5>
-                <p class="card-text text-body-secondary small flex-grow-1">{{ \Illuminate\Support\Str::limit($article->excerpt, 130) }}</p>
+                <p class="card-text text-body-secondary small grow">{{ \Illuminate\Support\Str::limit($article->excerpt, 130) }}</p>
                 <a href="{{ route('articles.show', $article->slug) }}" class="fw-medium text-primary mt-2 text-decoration-none">
                   Selengkapnya <i class="icon-base ti tabler-chevron-right icon-xs"></i>
                 </a>

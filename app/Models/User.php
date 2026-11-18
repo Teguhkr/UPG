@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -16,6 +17,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'satker_id',
         'role',
         'is_active',
         'last_login_at',
@@ -44,5 +46,15 @@ class User extends Authenticatable
     public function isSuperAdmin(): bool
     {
         return $this->role === 'super_admin';
+    }
+
+    public function satker(): BelongsTo
+    {
+        return $this->belongsTo(ListSatker::class, 'satker_id');
+    }
+
+    public function getEseloneringAttribute(): ?Eselonering
+    {
+        return $this->satker?->eselon;
     }
 }
