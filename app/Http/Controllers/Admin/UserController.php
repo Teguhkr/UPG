@@ -38,7 +38,7 @@ class UserController extends Controller
 
         $users = $usersQuery->orderBy('id')->paginate(15)->withQueryString();
         $eseloneringRows = Eselonering::orderBy('no_urut')->get();
-        $satkers = ListSatker::orderBy('list_satker')->get(['id', 'list_satker', 'eselonering']);
+        $satkers = ListSatker::orderBy('no_urut')->orderBy('id')->get(['id', 'list_satker', 'eselonering']);
 
         return view('admin.users.index', compact('users', 'eseloneringRows', 'satkers', 'search'));
     }
