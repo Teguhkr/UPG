@@ -110,17 +110,17 @@
       </div>
       <div class="d-flex gap-3">
         @if(!empty($siteSettings['twitter_url']))
-          <a href="{{ $siteSettings['twitter_url'] }}" class="text-white" target="_blank" rel="noopener noreferrer" title="Twitter / X">
+          <a href="{{ $siteSettings['twitter_url'] }}" class="footer-social-link" target="_blank" rel="noopener noreferrer" title="Twitter / X">
             <i class="icon-base ti tabler-brand-x icon-md"></i>
           </a>
         @endif
         @if(!empty($siteSettings['instagram_url']))
-          <a href="{{ $siteSettings['instagram_url'] }}" class="text-white" target="_blank" rel="noopener noreferrer" title="Instagram">
+          <a href="{{ $siteSettings['instagram_url'] }}" class="footer-social-link" target="_blank" rel="noopener noreferrer" title="Instagram">
             <i class="icon-base ti tabler-brand-instagram icon-md"></i>
           </a>
         @endif
         @if(!empty($siteSettings['youtube_url']))
-          <a href="{{ $siteSettings['youtube_url'] }}" class="text-white" target="_blank" rel="noopener noreferrer" title="YouTube">
+          <a href="{{ $siteSettings['youtube_url'] }}" class="footer-social-link" target="_blank" rel="noopener noreferrer" title="YouTube">
             <i class="icon-base ti tabler-brand-youtube icon-md"></i>
           </a>
         @endif

@@ -27,15 +27,18 @@
           @csrf
           <div class="mb-3">
             <label class="form-label">Nama Lengkap</label>
-            <input type="text" name="name" class="form-control" required />
+            <input type="text" name="name" value="{{ old('name') }}" class="form-control" required />
+            @error('name')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
           </div>
           <div class="mb-3">
             <label class="form-label">Username</label>
-            <input type="text" name="username" class="form-control" required />
+            <input type="text" name="username" value="{{ old('username') }}" class="form-control" required />
+            @error('username')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
           </div>
           <div class="mb-3">
             <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control" required />
+            <input type="email" name="email" value="{{ old('email') }}" class="form-control" required />
+            @error('email')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
           </div>
           <div class="mb-3" data-user-org>
             <label class="form-label">Eselon</label>
@@ -45,6 +48,7 @@
                 <option value="{{ $eselon->id }}" @selected(old('eselonering_id') == $eselon->id)>{{ $eselon->nama_eselon ?: $eselon->eselonering }}</option>
               @endforeach
             </select>
+            @error('eselonering_id')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
             <label class="form-label mt-3">Satuan Kerja</label>
             <select name="satker_id" class="form-select js-user-satker" required>
               <option value="">Pilih satuan kerja</option>
@@ -57,17 +61,18 @@
           <div class="mb-3">
             <label class="form-label">Role</label>
             <select name="role" class="form-select" required>
-              <option value="super_admin">Super Admin</option>
-              <option value="editor">Editor</option>
-              <option value="operator">Operator</option>
+              <option value="super_admin" @selected(old('role') === 'super_admin')>Super Admin</option>
+              <option value="editor" @selected(old('role', 'editor') === 'editor')>Editor</option>
+              <option value="operator" @selected(old('role') === 'operator')>Operator</option>
             </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Password</label>
             <input type="password" name="password" class="form-control" minlength="6" required />
+            @error('password')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
           </div>
           <div class="form-check mb-4">
-            <input type="checkbox" class="form-check-input" id="u_active" name="is_active" value="1" checked />
+            <input type="checkbox" class="form-check-input" id="u_active" name="is_active" value="1" @checked(old('is_active', '1')) />
             <label class="form-check-label" for="u_active">Akun Aktif</label>
           </div>
           <button type="submit" class="btn btn-primary w-100">Tambah Pengguna</button>
@@ -125,50 +130,6 @@
                   @endif
                 </td>
               </tr>
-
-              <div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                  <form method="POST" action="{{ route('admin.users.update', $user) }}" class="modal-content">
-                    @csrf @method('PUT')
-                    <div class="modal-header">
-                      <h5 class="modal-title">Edit Pengguna</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="mb-3"><label class="form-label">Nama</label><input type="text" name="name" value="{{ $user->name }}" class="form-control" required /></div>
-                      <div class="mb-3"><label class="form-label">Username</label><input type="text" name="username" value="{{ $user->username }}" class="form-control" required /></div>
-                      <div class="mb-3"><label class="form-label">Email</label><input type="email" name="email" value="{{ $user->email }}" class="form-control" required /></div>
-                      <div class="mb-3" data-user-org>
-                        <label class="form-label">Eselon</label>
-                        <select name="eselonering_id" class="form-select js-user-eselon" required>
-                          <option value="">Pilih eselon</option>
-                          @foreach($eseloneringRows as $eselon)
-                            <option value="{{ $eselon->id }}" @selected($user->satker?->eselonering == $eselon->id)>{{ $eselon->nama_eselon ?: $eselon->eselonering }}</option>
-                          @endforeach
-                        </select>
-                        <label class="form-label mt-3">Satuan Kerja</label>
-                        <select name="satker_id" class="form-select js-user-satker" required>
-                          <option value="">Pilih satuan kerja</option>
-                          @foreach($satkers as $satker)
-                            <option value="{{ $satker->id }}" data-eselon-id="{{ $satker->eselonering }}" @selected($user->satker_id == $satker->id)>{{ $satker->list_satker }}</option>
-                          @endforeach
-                        </select>
-                      </div>
-                      <div class="mb-3">
-                        <label class="form-label">Role</label>
-                        <select name="role" class="form-select">
-                          <option value="super_admin" {{ $user->role === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
-                          <option value="editor" {{ $user->role === 'editor' ? 'selected' : '' }}>Editor</option>
-                          <option value="operator" {{ $user->role === 'operator' ? 'selected' : '' }}>Operator</option>
-                        </select>
-                      </div>
-                      <div class="mb-3"><label class="form-label">Password Baru (opsional)</label><input type="password" name="password" class="form-control" placeholder="Kosongkan jika tidak diganti" /></div>
-                      <div class="form-check"><input type="checkbox" class="form-check-input" name="is_active" value="1" {{ $user->is_active ? 'checked' : '' }} /><label class="form-check-label">Aktif</label></div>
-                    </div>
-                    <div class="modal-footer"><button type="submit" class="btn btn-primary">Simpan</button></div>
-                  </form>
-                </div>
-              </div>
             @endforeach
             @if($users->isEmpty())
               <tr><td colspan="7" class="text-center text-body-secondary py-5">Tidak ada pengguna yang cocok dengan pencarian.</td></tr>
@@ -176,6 +137,51 @@
           </tbody>
         </table>
       </div>
+      @foreach($users as $user)
+        <div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <form method="POST" action="{{ route('admin.users.update', $user) }}" class="modal-content bg-body">
+              @csrf @method('PUT')
+              <div class="modal-header">
+                <h5 class="modal-title">Edit Pengguna</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3"><label class="form-label">Nama</label><input type="text" name="name" value="{{ $user->name }}" class="form-control" required /></div>
+                <div class="mb-3"><label class="form-label">Username</label><input type="text" name="username" value="{{ $user->username }}" class="form-control" required /></div>
+                <div class="mb-3"><label class="form-label">Email</label><input type="email" name="email" value="{{ $user->email }}" class="form-control" required /></div>
+                <div class="mb-3" data-user-org>
+                  <label class="form-label">Eselon</label>
+                  <select name="eselonering_id" class="form-select js-user-eselon" required>
+                    <option value="">Pilih eselon</option>
+                    @foreach($eseloneringRows as $eselon)
+                      <option value="{{ $eselon->id }}" @selected($user->satker?->eselonering == $eselon->id)>{{ $eselon->nama_eselon ?: $eselon->eselonering }}</option>
+                    @endforeach
+                  </select>
+                  <label class="form-label mt-3">Satuan Kerja</label>
+                  <select name="satker_id" class="form-select js-user-satker" required>
+                    <option value="">Pilih satuan kerja</option>
+                    @foreach($satkers as $satker)
+                      <option value="{{ $satker->id }}" data-eselon-id="{{ $satker->eselonering }}" @selected($user->satker_id == $satker->id)>{{ $satker->list_satker }}</option>
+                    @endforeach
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Role</label>
+                  <select name="role" class="form-select">
+                    <option value="super_admin" {{ $user->role === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                    <option value="editor" {{ $user->role === 'editor' ? 'selected' : '' }}>Editor</option>
+                    <option value="operator" {{ $user->role === 'operator' ? 'selected' : '' }}>Operator</option>
+                  </select>
+                </div>
+                <div class="mb-3"><label class="form-label">Password Baru (opsional)</label><input type="password" name="password" class="form-control" placeholder="Kosongkan jika tidak diganti" /></div>
+                <div class="form-check"><input type="checkbox" class="form-check-input" name="is_active" value="1" {{ $user->is_active ? 'checked' : '' }} /><label class="form-check-label">Aktif</label></div>
+              </div>
+              <div class="modal-footer"><button type="submit" class="btn btn-primary">Simpan</button></div>
+            </form>
+          </div>
+        </div>
+      @endforeach
       @if($users->hasPages())
         <div class="card-footer">{{ $users->links() }}</div>
       @endif

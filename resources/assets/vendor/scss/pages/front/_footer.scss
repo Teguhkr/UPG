@@ -22,7 +22,7 @@
   .footer-bottom {
     background-color: var(--#{$prefix}footer-bottom-bg);
 
-    a {
+    .footer-social-link {
       color: var(--#{$prefix}footer-bottom-text);
     }
   }
@@ -76,5 +76,13 @@
     label {
       color: $headings-color-dark;
     }
+  }
+}
+
+[data-bs-theme='dark'] {
+  .landing-footer {
+    --#{$prefix}footer-bottom-text: #f7e9eb;
+    --#{$prefix}footer-bottom-bg: #241317;
+    --#{$prefix}footer-top-bg: #3a171d;
   }
 }
