@@ -85,6 +85,9 @@ class UpgPortalTest extends TestCase
             $article = Article::where('slug', $slug)->firstOrFail();
             $this->assertNotNull($article->featured_image);
             Storage::disk('public')->assertExists($article->featured_image);
+            $this->actingAs($admin)->get('/admin/articles/' . $article->id . '/edit')
+                ->assertOk()
+                ->assertSee('Hapus');
 
             $this->get('/artikel/' . $article->slug)
                 ->assertStatus(200)
@@ -108,6 +111,14 @@ class UpgPortalTest extends TestCase
             $this->get('/artikel/' . $article->slug)
                 ->assertStatus(200)
                 ->assertSee($article->image_url, false);
+
+            $imageToRemove = $article->featured_image;
+            $this->actingAs($admin)->delete('/admin/articles/' . $article->id . '/featured-image')
+                ->assertRedirect();
+
+            $article->refresh();
+            $this->assertNull($article->featured_image);
+            Storage::disk('public')->assertMissing($imageToRemove);
         } finally {
             Article::where('slug', $slug)->delete();
         }

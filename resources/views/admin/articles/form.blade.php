@@ -69,6 +69,9 @@
           <input type="file" name="featured_image_file" class="form-control" accept="image/*" />
           @if($article->image_url)
             <img src="{{ $article->image_url }}" alt="" class="mt-2 rounded" style="max-height: 120px;" />
+            <button type="submit" form="deleteFeaturedImageForm" class="btn btn-outline-danger btn-sm mt-2">
+              <i class="icon-base ti tabler-trash me-1"></i> Hapus
+            </button>
           @endif
         </div>
         <div class="col-md-6">
@@ -83,6 +86,13 @@
         </div>
       </div>
     </form>
+    @if($article->exists && $article->image_url)
+      <form id="deleteFeaturedImageForm" method="POST" action="{{ route('admin.articles.featured-image.destroy', $article) }}"
+        onsubmit="return confirm('Hapus gambar sampul artikel ini?')">
+        @csrf
+        @method('DELETE')
+      </form>
+    @endif
   </div>
 </div>
 @endsection

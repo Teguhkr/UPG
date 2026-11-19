@@ -108,6 +108,18 @@ class ArticleController extends Controller
             ->with('success', 'Artikel berhasil dihapus.');
     }
 
+    public function destroyFeaturedImage(Article $article): RedirectResponse
+    {
+        if ($article->featured_image && str_starts_with($article->featured_image, 'upg-media/uploads/')) {
+            Storage::disk('public')->delete($article->featured_image);
+        }
+
+        $article->update(['featured_image' => null]);
+
+        return redirect()->back()
+            ->with('success', 'Gambar sampul artikel berhasil dihapus.');
+    }
+
     protected function validatedData(Request $request, ?int $ignoreId = null): array
     {
         return $request->validate([

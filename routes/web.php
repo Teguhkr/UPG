@@ -63,6 +63,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
+        Route::delete('/articles/{article}/featured-image', [AdminArticleController::class, 'destroyFeaturedImage'])
+            ->name('articles.featured-image.destroy');
         Route::resource('articles', AdminArticleController::class)->except(['show']);
         Route::resource('categories', AdminCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('faqs', AdminFaqController::class)->except(['show']);
