@@ -53,37 +53,6 @@
             </td>
           </tr>
 
-          <div class="modal fade" id="inqModal{{ $inq->id }}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-              <form method="POST" action="{{ route('admin.inquiries.update', $inq) }}" class="modal-content">
-                @csrf @method('PUT')
-                <div class="modal-header">
-                  <h5 class="modal-title">{{ $inq->subject }}</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                  <p class="mb-2"><strong>Dari:</strong> {{ $inq->name }} ({{ $inq->email }}) | <strong>Telp:</strong> {{ $inq->phone ?: '-' }}</p>
-                  <p class="mb-3"><strong>Unit Kerja:</strong> {{ $inq->unit_kerja ?: '-' }}</p>
-                  <div class="p-3 bg-body-secondary rounded mb-4">{!! nl2br(e($inq->message)) !!}</div>
-                  <div class="mb-3">
-                    <label class="form-label">Status Penanganan</label>
-                    <select name="status" class="form-select">
-                      <option value="baru" {{ $inq->status === 'baru' ? 'selected' : '' }}>Baru</option>
-                      <option value="diproses" {{ $inq->status === 'diproses' ? 'selected' : '' }}>Sedang Diproses</option>
-                      <option value="selesai" {{ $inq->status === 'selesai' ? 'selected' : '' }}>Selesai</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="form-label">Catatan Tindak Lanjut Admin</label>
-                    <textarea name="admin_notes" rows="3" class="form-control">{{ $inq->admin_notes }}</textarea>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">Simpan Status</button>
-                </div>
-              </form>
-            </div>
-          </div>
         @empty
           <tr><td colspan="5" class="text-center py-6 text-body-secondary">Belum ada pesan konsultasi masuk.</td></tr>
         @endforelse
@@ -94,5 +63,38 @@
     <div class="card-footer">{{ $inquiries->links() }}</div>
   @endif
 </div>
+@foreach($inquiries as $inq)
+  <div class="modal fade" id="inqModal{{ $inq->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <form method="POST" action="{{ route('admin.inquiries.update', $inq) }}" class="modal-content bg-body">
+        @csrf @method('PUT')
+        <div class="modal-header">
+          <h5 class="modal-title">{{ $inq->subject }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-2"><strong>Dari:</strong> {{ $inq->name }} ({{ $inq->email }}) | <strong>Telp:</strong> {{ $inq->phone ?: '-' }}</p>
+          <p class="mb-3"><strong>Unit Kerja:</strong> {{ $inq->unit_kerja ?: '-' }}</p>
+          <div class="p-3 bg-body-secondary rounded mb-4">{!! nl2br(e($inq->message)) !!}</div>
+          <div class="mb-3">
+            <label class="form-label">Status Penanganan</label>
+            <select name="status" class="form-select">
+              <option value="baru" {{ $inq->status === 'baru' ? 'selected' : '' }}>Baru</option>
+              <option value="diproses" {{ $inq->status === 'diproses' ? 'selected' : '' }}>Sedang Diproses</option>
+              <option value="selesai" {{ $inq->status === 'selesai' ? 'selected' : '' }}>Selesai</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Catatan Tindak Lanjut Admin</label>
+            <textarea name="admin_notes" rows="3" class="form-control">{{ $inq->admin_notes }}</textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Simpan Status</button>
+        </div>
+      </form>
+    </div>
+  </div>
+@endforeach
 @endsection
 

@@ -89,46 +89,6 @@
                 </td>
               </tr>
 
-              <!-- Edit Modal -->
-              <div class="modal fade" id="editCatModal{{ $cat->id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                  <form method="POST" action="{{ route('admin.categories.update', $cat) }}" class="modal-content">
-                    @csrf @method('PUT')
-                    <div class="modal-header">
-                      <h5 class="modal-title">Edit Kategori</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="mb-3">
-                        <label class="form-label">Nama</label>
-                        <input type="text" name="name" value="{{ $cat->name }}" class="form-control" required />
-                      </div>
-                      <div class="mb-3">
-                        <label class="form-label">Tipe</label>
-                        <select name="type" class="form-select">
-                          <option value="article" {{ $cat->type === 'article' ? 'selected' : '' }}>Artikel</option>
-                          <option value="download" {{ $cat->type === 'download' ? 'selected' : '' }}>Unduh</option>
-                        </select>
-                      </div>
-                      <div class="mb-3">
-                        <label class="form-label">Urutan</label>
-                        <input type="number" name="sort_order" value="{{ $cat->sort_order }}" class="form-control" />
-                      </div>
-                      <div class="mb-3">
-                        <label class="form-label">Deskripsi</label>
-                        <textarea name="description" rows="2" class="form-control">{{ $cat->description }}</textarea>
-                      </div>
-                      <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="is_published" value="1" {{ $cat->is_published ? 'checked' : '' }} />
-                        <label class="form-check-label">Aktif</label>
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
             @endforeach
           </tbody>
         </table>
@@ -136,5 +96,46 @@
     </div>
   </div>
 </div>
+@foreach($categories as $cat)
+  <div class="modal fade" id="editCatModal{{ $cat->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="POST" action="{{ route('admin.categories.update', $cat) }}" class="modal-content bg-body">
+        @csrf @method('PUT')
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Kategori</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Nama</label>
+            <input type="text" name="name" value="{{ $cat->name }}" class="form-control" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tipe</label>
+            <select name="type" class="form-select">
+              <option value="article" {{ $cat->type === 'article' ? 'selected' : '' }}>Artikel</option>
+              <option value="download" {{ $cat->type === 'download' ? 'selected' : '' }}>Unduh</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Urutan</label>
+            <input type="number" name="sort_order" value="{{ $cat->sort_order }}" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Deskripsi</label>
+            <textarea name="description" rows="2" class="form-control">{{ $cat->description }}</textarea>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="is_published" value="1" {{ $cat->is_published ? 'checked' : '' }} />
+            <label class="form-check-label">Aktif</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+@endforeach
 @endsection
 
