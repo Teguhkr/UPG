@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Faq;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -28,8 +29,10 @@ class FaqController extends Controller
 
     public function create(): View
     {
+        $nextOrder = ((int) Faq::where('category_type', 'faq')->max('sort_order')) + 1;
+
         return view('admin.faqs.form', [
-            'faq' => new Faq(['category_type' => 'faq', 'is_published' => true, 'sort_order' => 0]),
+            'faq' => new Faq(['category_type' => 'faq', 'is_published' => true, 'sort_order' => $nextOrder]),
         ]);
     }
 
@@ -39,7 +42,7 @@ class FaqController extends Controller
             'category_type' => ['required', 'in:faq,contoh_kasus'],
             'question' => ['required', 'string', 'max:255'],
             'answer' => ['required', 'string'],
-            'sort_order' => ['nullable', 'integer'],
+            'sort_order' => ['nullable', 'integer', 'min:1'],
         ]);
 
         $base = Str::slug($data['question']);
@@ -52,14 +55,20 @@ class FaqController extends Controller
             $slug = $base . '-' . $i++;
         }
 
-        Faq::create([
-            'category_type' => $data['category_type'],
-            'question' => $data['question'],
-            'slug' => $slug,
-            'answer' => $data['answer'],
-            'sort_order' => (int) ($data['sort_order'] ?? 0),
-            'is_published' => $request->boolean('is_published', true),
-        ]);
+        DB::transaction(function () use ($request, $data, $slug): void {
+            $desiredOrder = isset($data['sort_order']) ? (int) $data['sort_order'] : null;
+
+            $faq = Faq::create([
+                'category_type' => $data['category_type'],
+                'question' => $data['question'],
+                'slug' => $slug,
+                'answer' => $data['answer'],
+                'sort_order' => $desiredOrder ?? 0,
+                'is_published' => $request->boolean('is_published', true),
+            ]);
+
+            $this->reorderCategory($data['category_type'], $faq, $desiredOrder ?? (int) $faq->sort_order);
+        });
 
         return redirect()->route('admin.faqs.index')
             ->with('success', 'Item FAQ / Contoh Kasus berhasil ditambahkan.');
@@ -76,16 +85,27 @@ class FaqController extends Controller
             'category_type' => ['required', 'in:faq,contoh_kasus'],
             'question' => ['required', 'string', 'max:255'],
             'answer' => ['required', 'string'],
-            'sort_order' => ['nullable', 'integer'],
+            'sort_order' => ['nullable', 'integer', 'min:1'],
         ]);
 
-        $faq->update([
-            'category_type' => $data['category_type'],
-            'question' => $data['question'],
-            'answer' => $data['answer'],
-            'sort_order' => (int) ($data['sort_order'] ?? 0),
-            'is_published' => $request->boolean('is_published'),
-        ]);
+        DB::transaction(function () use ($request, $faq, $data): void {
+            $previousCategory = $faq->category_type;
+            $desiredOrder = isset($data['sort_order']) ? (int) $data['sort_order'] : null;
+
+            $faq->update([
+                'category_type' => $data['category_type'],
+                'question' => $data['question'],
+                'answer' => $data['answer'],
+                'sort_order' => $desiredOrder ?? $faq->sort_order,
+                'is_published' => $request->boolean('is_published'),
+            ]);
+
+            $this->reorderCategory($data['category_type'], $faq, $desiredOrder ?? (int) $faq->sort_order);
+
+            if ($previousCategory !== $data['category_type']) {
+                $this->reorderCategory($previousCategory);
+            }
+        });
 
         return redirect()->route('admin.faqs.index')
             ->with('success', 'Item FAQ / Contoh Kasus berhasil diperbarui.');
@@ -93,10 +113,44 @@ class FaqController extends Controller
 
     public function destroy(Faq $faq): RedirectResponse
     {
-        $faq->delete();
+        $categoryType = $faq->category_type;
+
+        DB::transaction(function () use ($faq, $categoryType): void {
+            $faq->delete();
+            $this->reorderCategory($categoryType);
+        });
 
         return redirect()->route('admin.faqs.index')
             ->with('success', 'Item FAQ / Contoh Kasus berhasil dihapus.');
+    }
+
+    /**
+     * Re-sequence sort_order (1..N) for a category_type, placing the prioritized
+     * item at the requested position so existing items shift down cleanly.
+     */
+    protected function reorderCategory(string $categoryType, ?Faq $prioritized = null, ?int $desiredOrder = null): void
+    {
+        $items = Faq::where('category_type', $categoryType)
+            ->when($prioritized, fn ($q) => $q->where('id', '!=', $prioritized->id))
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get()
+            ->values();
+
+        if ($prioritized) {
+            $targetPos = $desiredOrder !== null
+                ? max(1, min($desiredOrder, $items->count() + 1))
+                : $items->count() + 1;
+
+            $items->splice($targetPos - 1, 0, [$prioritized]);
+        }
+
+        foreach ($items as $index => $item) {
+            $pos = $index + 1;
+            if ((int) $item->sort_order !== $pos) {
+                Faq::whereKey($item->id)->update(['sort_order' => $pos]);
+            }
+        }
     }
 }
 

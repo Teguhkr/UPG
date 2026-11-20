@@ -4,8 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\Faq;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -121,6 +123,81 @@ class UpgPortalTest extends TestCase
             Storage::disk('public')->assertMissing($imageToRemove);
         } finally {
             Article::where('slug', $slug)->delete();
+        }
+    }
+
+    public function test_faq_and_case_sort_order_shifts_cleanly_on_create_and_update(): void
+    {
+        $admin = User::where('username', 'adminupg')->firstOrFail();
+
+        DB::beginTransaction();
+
+        try {
+            $firstFaq = Faq::where('category_type', 'faq')->orderBy('sort_order')->orderBy('id')->first();
+            $initialCount = Faq::where('category_type', 'faq')->count();
+
+            // Create a new FAQ at sort_order = 1; it should take priority 1 and shift existing items down
+            $this->actingAs($admin)->post('/admin/faqs', [
+                'category_type' => 'faq',
+                'question' => 'FAQ Prioritas Baru Test',
+                'answer' => '<p>Jawaban uji prioritas.</p>',
+                'sort_order' => 1,
+                'is_published' => '1',
+            ])->assertRedirect('/admin/faqs');
+
+            $created = Faq::where('question', 'FAQ Prioritas Baru Test')->firstOrFail();
+            $this->assertSame(1, (int) $created->sort_order);
+
+            if ($firstFaq) {
+                $firstFaq->refresh();
+                $this->assertSame(2, (int) $firstFaq->sort_order);
+            }
+
+            $orders = Faq::where('category_type', 'faq')
+                ->orderBy('sort_order')
+                ->pluck('sort_order')
+                ->map(fn ($v) => (int) $v)
+                ->all();
+            $this->assertSame(range(1, $initialCount + 1), $orders);
+
+            // Create another FAQ at sort_order = 2 and then edit the first to move to sort_order = 2
+            $this->actingAs($admin)->post('/admin/faqs', [
+                'category_type' => 'faq',
+                'question' => 'FAQ Kedua Test',
+                'answer' => '<p>Jawaban kedua.</p>',
+                'sort_order' => 2,
+                'is_published' => '1',
+            ])->assertRedirect('/admin/faqs');
+
+            $secondCreated = Faq::where('question', 'FAQ Kedua Test')->firstOrFail();
+            $this->assertSame(2, (int) $secondCreated->sort_order);
+            if ($firstFaq) {
+                $firstFaq->refresh();
+                $this->assertSame(3, (int) $firstFaq->sort_order);
+            }
+
+            // Edit secondCreated from sort_order = 2 to sort_order = 1 -> created shifts to 2
+            $this->actingAs($admin)->put('/admin/faqs/' . $secondCreated->id, [
+                'category_type' => 'faq',
+                'question' => 'FAQ Kedua Test',
+                'answer' => '<p>Jawaban kedua.</p>',
+                'sort_order' => 1,
+                'is_published' => '1',
+            ])->assertRedirect('/admin/faqs');
+
+            $secondCreated->refresh();
+            $created->refresh();
+            $this->assertSame(1, (int) $secondCreated->sort_order);
+            $this->assertSame(2, (int) $created->sort_order);
+
+            $updatedOrders = Faq::where('category_type', 'faq')
+                ->orderBy('sort_order')
+                ->pluck('sort_order')
+                ->map(fn ($v) => (int) $v)
+                ->all();
+            $this->assertSame(range(1, $initialCount + 2), $updatedOrders);
+        } finally {
+            DB::rollBack();
         }
     }
 }

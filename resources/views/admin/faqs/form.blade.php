@@ -23,7 +23,7 @@
         </div>
         <div class="col-md-4">
           <label class="form-label">Urutan</label>
-          <input type="number" name="sort_order" value="{{ old('sort_order', $faq->sort_order) }}" class="form-control" />
+          <input type="number" name="sort_order" min="1" value="{{ old('sort_order', $faq->sort_order) }}" class="form-control" />
         </div>
         <div class="col-md-4 d-flex align-items-end pb-2">
           <div class="form-check">
