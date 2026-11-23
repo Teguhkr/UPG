@@ -2,6 +2,14 @@
 
 @section('title', $faq->exists ? 'Edit FAQ / Kasus' : 'Tambah FAQ / Kasus')
 
+@section('vendor-style')
+@vite(['resources/assets/vendor/libs/quill/typography.scss', 'resources/assets/vendor/libs/quill/katex.scss', 'resources/assets/vendor/libs/quill/editor.scss'])
+@endsection
+
+@section('page-script')
+@vite(['resources/assets/js/admin-quill.js'])
+@endsection
+
 @section('content')
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
@@ -37,8 +45,11 @@
           <input type="text" name="question" value="{{ old('question', $faq->question) }}" class="form-control" required />
         </div>
         <div class="col-12">
-          <label class="form-label">Jawaban / Penjelasan (HTML) <span class="text-danger">*</span></label>
-          <textarea name="answer" rows="10" class="form-control font-monospace" required>{{ old('answer', $faq->answer) }}</textarea>
+          <label class="form-label">Jawaban / Penjelasan <span class="text-danger">*</span></label>
+          <div data-quill-wrapper data-placeholder="Tulis jawaban atau penjelasan di sini...">
+            <div data-quill-editor style="min-height: 240px;"></div>
+            <textarea name="answer" class="d-none" data-quill-input data-quill-required>{{ old('answer', $faq->answer) }}</textarea>
+          </div>
         </div>
         <div class="col-12">
           <button type="submit" class="btn btn-primary">

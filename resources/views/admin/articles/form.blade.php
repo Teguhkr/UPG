@@ -2,6 +2,14 @@
 
 @section('title', $article->exists ? 'Edit Artikel' : 'Tambah Artikel')
 
+@section('vendor-style')
+@vite(['resources/assets/vendor/libs/quill/typography.scss', 'resources/assets/vendor/libs/quill/katex.scss', 'resources/assets/vendor/libs/quill/editor.scss'])
+@endsection
+
+@section('page-script')
+@vite(['resources/assets/js/admin-quill.js'])
+@endsection
+
 @section('content')
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
@@ -60,8 +68,11 @@
         </div>
 
         <div class="col-12">
-          <label class="form-label">Isi Konten (HTML)</label>
-          <textarea name="content" rows="14" class="form-control font-monospace">{{ old('content', $article->content) }}</textarea>
+          <label class="form-label">Isi Konten</label>
+          <div data-quill-wrapper data-placeholder="Tulis isi artikel di sini...">
+            <div data-quill-editor style="min-height: 320px;"></div>
+            <textarea name="content" class="d-none" data-quill-input>{{ old('content', $article->content) }}</textarea>
+          </div>
         </div>
 
         <div class="col-md-6">
