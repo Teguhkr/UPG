@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Fallback untuk hosting tanpa ekstensi PHP "fileinfo":
         // deteksi MIME type berdasarkan ekstensi file, bukan class finfo.
-        if (!class_exists('finfo')) {
+        if (! class_exists('finfo')) {
             Storage::extend('local', function ($app, array $config) {
                 $visibility = PortableVisibilityConverter::fromArray(
                     $config['permissions'] ?? [],
@@ -34,8 +34,8 @@ class AppServiceProvider extends ServiceProvider
                     $visibility,
                     $config['lock'] ?? LOCK_EX,
                     ($config['links'] ?? null) === 'skip'
-                    ? LeagueLocalAdapter::SKIP_LINKS
-                    : LeagueLocalAdapter::DISALLOW_LINKS,
+                        ? LeagueLocalAdapter::SKIP_LINKS
+                        : LeagueLocalAdapter::DISALLOW_LINKS,
                     new ExtensionMimeTypeDetector
                 );
 
