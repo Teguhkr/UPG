@@ -64,6 +64,7 @@
               <option value="super_admin" @selected(old('role') === 'super_admin')>Super Admin</option>
               <option value="editor" @selected(old('role', 'editor') === 'editor')>Editor</option>
               <option value="operator" @selected(old('role') === 'operator')>Operator</option>
+              <option value="admin_unit_kerja" @selected(old('role') === 'admin_unit_kerja')>Admin Unit Kerja</option>
             </select>
           </div>
           <div class="mb-3">
