@@ -5,7 +5,7 @@
 @endphp
 
 <!-- Floating Quick Action Button -->
-<div class="position-fixed bottom-0 end-0 p-4" style="z-index: 1040;">
+<div id="floatingQuickAction" class="position-fixed end-0 me-3" style="bottom: 16px;">
   <div class="btn-group dropup shadow-lg rounded-pill">
     <button type="button" class="btn btn-primary rounded-pill px-4 py-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
       <i class="icon-base ti tabler-bolt me-1"></i> Akses Cepat UPG
@@ -129,3 +129,57 @@
   </div>
 </footer>
 <!-- Footer: End -->
+
+<script>
+  (() => {
+    const quickAction = document.getElementById('floatingQuickAction');
+    const copyright = document.querySelector('.landing-footer .footer-bottom');
+
+    if (!quickAction || !copyright) return;
+
+    let frameId = null;
+    const updateQuickActionPosition = () => {
+
+const buttonHeight = quickAction.getBoundingClientRect().height;
+const copyrightRect = copyright.getBoundingClientRect();
+const copyrightMidpoint = copyrightRect.top + (copyrightRect.height / 2);
+
+const isCopyrightVisible =
+    copyrightRect.bottom > 0 &&
+    copyrightRect.top < window.innerHeight;
+
+const EXTRA_GAP = 16;
+
+if (isCopyrightVisible) {
+    const viewportLimit = Math.max(
+        16,
+        window.innerHeight - buttonHeight - 16
+    );
+
+    const footerLimit =
+        window.innerHeight - copyrightMidpoint + EXTRA_GAP;
+
+    const bottomOffset = Math.min(
+        viewportLimit,
+        Math.max(16, footerLimit)
+    );
+
+    quickAction.style.bottom = `${bottomOffset}px`;
+} else {
+    quickAction.style.bottom = '16px';
+}
+
+
+      frameId = null;
+    };
+
+    const requestPositionUpdate = () => {
+      if (frameId !== null) return;
+      frameId = window.requestAnimationFrame(updateQuickActionPosition);
+    };
+
+    window.addEventListener('scroll', requestPositionUpdate, { passive: true });
+    window.addEventListener('resize', requestPositionUpdate);
+    updateQuickActionPosition();
+  })();
+</script>
