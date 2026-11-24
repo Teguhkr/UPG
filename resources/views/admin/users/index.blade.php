@@ -172,6 +172,7 @@
                     <option value="super_admin" {{ $user->role === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
                     <option value="editor" {{ $user->role === 'editor' ? 'selected' : '' }}>Editor</option>
                     <option value="operator" {{ $user->role === 'operator' ? 'selected' : '' }}>Operator</option>
+                    <option value="admin_unit_kerja" {{ $user->role === 'admin_unit_kerja' ? 'selected' : '' }}>Admin Unit Kerja</option>
                   </select>
                 </div>
                 <div class="mb-3"><label class="form-label">Password Baru (opsional)</label><input type="password" name="password" class="form-control" placeholder="Kosongkan jika tidak diganti" /></div>

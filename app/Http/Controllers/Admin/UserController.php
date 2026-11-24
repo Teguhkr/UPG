@@ -49,7 +49,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:150'],
             'username' => ['required', 'string', 'max:80', 'unique:users,username'],
             'email' => ['required', 'email', 'max:150', 'unique:users,email'],
-            'role' => ['required', 'in:super_admin,editor,operator'],
+            'role' => ['required', 'in:super_admin,editor,operator,admin_unit_kerja'],
             'eselonering_id' => ['required', 'integer', Rule::exists('eselonering', 'id')],
             'satker_id' => [
                 'required',
@@ -79,7 +79,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:150'],
             'username' => ['required', 'string', 'max:80', Rule::unique('users', 'username')->ignore($user->id)],
             'email' => ['required', 'email', 'max:150', Rule::unique('users', 'email')->ignore($user->id)],
-            'role' => ['required', 'in:super_admin,editor,operator'],
+            'role' => ['required', 'in:super_admin,editor,operator,admin_unit_kerja'],
             'eselonering_id' => ['required', 'integer', Rule::exists('eselonering', 'id')],
             'satker_id' => [
                 'required',
