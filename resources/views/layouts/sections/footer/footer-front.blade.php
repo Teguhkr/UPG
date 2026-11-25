@@ -73,12 +73,12 @@
             </li>
             <li class="mb-3">
               <a href="{{ $kpkUrl }}" target="_blank" rel="noopener noreferrer" class="footer-link">
-                Beranda Gratifikasi KPK <i class="icon-base ti tabler-external-link icon-xs ms-1"></i>
+                Materi Gratifikasi KPK <i class="icon-base ti tabler-external-link icon-xs ms-1"></i>
               </a>
             </li>
             <li class="mb-3">
               <a href="{{ $simulasiUrl }}" target="_blank" rel="noopener noreferrer" class="footer-link">
-                Simulasi Laporan Gratifikasi <i class="icon-base ti tabler-external-link icon-xs ms-1"></i>
+                Prosedur Laporan Gratifikasi <i class="icon-base ti tabler-external-link icon-xs ms-1"></i>
               </a>
             </li>
             <li>
