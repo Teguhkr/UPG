@@ -66,6 +66,40 @@ class UpgPortalTest extends TestCase
         }
     }
 
+    public function test_admin_theme_switcher_has_the_javascript_hook(): void
+    {
+        $admin = User::where('username', 'adminupg')->firstOrFail();
+
+        $this->actingAs($admin)
+            ->get('/admin')
+            ->assertOk()
+            ->assertSee('dropdown-style-switcher');
+    }
+
+    public function test_only_super_admins_can_access_user_management_and_site_settings(): void
+    {
+        $user = User::factory()->create([
+            'username' => 'role-test-' . uniqid(),
+            'role' => 'editor',
+        ]);
+
+        try {
+            $this->actingAs($user)
+                ->get('/admin')
+                ->assertOk()
+                ->assertDontSee(route('admin.users.index'), false)
+                ->assertDontSee(route('admin.settings.index'), false)
+                ->assertDontSee('Pengaturan Situs');
+
+            $this->get('/admin/users')->assertForbidden();
+            $this->post('/admin/users')->assertForbidden();
+            $this->get('/admin/settings')->assertForbidden();
+            $this->put('/admin/settings')->assertForbidden();
+        } finally {
+            $user->delete();
+        }
+    }
+
     public function test_article_cover_image_is_displayed_on_detail_page(): void
     {
         Storage::fake('public');

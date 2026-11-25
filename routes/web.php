@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\MediaItemController as AdminMediaItemController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Middleware\EnsureSuperAdmin;
 use App\Http\Controllers\Frontend\ArticleController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\DownloadController;
@@ -71,9 +72,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('downloads', AdminDownloadController::class)->except(['show']);
         Route::resource('media', AdminMediaItemController::class)->except(['show']);
         Route::resource('inquiries', AdminInquiryController::class)->only(['index', 'update', 'destroy']);
-        Route::resource('users', AdminUserController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::middleware(EnsureSuperAdmin::class)->group(function () {
+            Route::resource('users', AdminUserController::class)->only(['index', 'store', 'update', 'destroy']);
 
-        Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
-        Route::put('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
+            Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
+            Route::put('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
+        });
     });
 });
