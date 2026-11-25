@@ -22,7 +22,7 @@
             $heroTitle = $siteSettings['hero_title'] ?? 'Wujudkan Integritas Kementerian Kelautan dan Perikanan Bebas Gratifikasi';
             $heroTitleHighlight = 'Kelautan dan Perikanan Bebas Gratifikasi';
           @endphp
-          <span class="badge bg-label-primary mb-3 px-3 py-2">
+          <span class="badge bg-label-primary mb-3 px-3 py-2 hero-tagline">
             <i class="icon-base ti tabler-shield-check me-1"></i>
             {{ $siteSettings['site_tagline'] ?? 'Unit Pengendalian Gratifikasi KKP RI' }}
           </span>

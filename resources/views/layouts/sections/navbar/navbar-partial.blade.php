@@ -28,7 +28,7 @@
 
   <ul class="navbar-nav flex-row align-items-center ms-auto">
     <!-- Theme Switcher -->
-    <li class="nav-item dropdown me-2">
+    <li class="nav-item dropdown dropdown-style-switcher me-2">
       <a class="nav-link dropdown-toggle hide-arrow" id="nav-theme" href="javascript:void(0);" data-bs-toggle="dropdown">
         <i class="icon-base ti tabler-sun icon-md theme-icon-active"></i>
       </a>
@@ -74,11 +74,13 @@
           </div>
         </li>
         <li><div class="dropdown-divider my-1 mx-n2"></div></li>
-        <li>
-          <a class="dropdown-item" href="{{ route('admin.settings.index') }}">
-            <i class="icon-base ti tabler-settings me-3 icon-md"></i><span>Pengaturan Situs</span>
-          </a>
-        </li>
+        @if (Auth::user()?->isSuperAdmin())
+          <li>
+            <a class="dropdown-item" href="{{ route('admin.settings.index') }}">
+              <i class="icon-base ti tabler-settings me-3 icon-md"></i><span>Pengaturan Situs</span>
+            </a>
+          </li>
+        @endif
         <li>
           <form method="POST" action="{{ route('admin.logout') }}">
             @csrf

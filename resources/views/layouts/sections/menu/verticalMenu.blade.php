@@ -1,6 +1,7 @@
 @php
 use Illuminate\Support\Facades\Route;
 $configData = Helper::appClasses();
+$isSuperAdmin = auth()->user()?->isSuperAdmin() ?? false;
 @endphp
 
 <aside id="layout-menu" class="layout-menu menu-vertical menu" @foreach ($configData['menuAttributes'] as $attribute=>
@@ -26,6 +27,9 @@ $configData = Helper::appClasses();
 
   <ul class="menu-inner py-1">
     @foreach ($menuData[0]->menu as $menu)
+    @if (!$isSuperAdmin && in_array($menu->slug ?? null, ['admin.users', 'admin.settings'], true))
+      @continue
+    @endif
     {{-- adding active and open class if child is active --}}
 
     {{-- menu headers --}}

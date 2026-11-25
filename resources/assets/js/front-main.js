@@ -59,17 +59,22 @@ window.isDarkStyle = window.Helpers.isDarkStyle();
   }
 
   document.addEventListener('click', function (event) {
+    if (
+      event.target instanceof Element &&
+      event.target.closest('[data-bs-toggle="collapse"][data-bs-target="#navbarSupportedContent"]')
+    ) {
+      return;
+    }
+
     // Check if the clicked element is inside mobile menu
     if (!menu.contains(event.target)) {
       closeMenu();
     }
   });
   navItemLink.forEach(link => {
-    link.addEventListener('click', event => {
+    link.addEventListener('click', () => {
       if (!link.classList.contains('dropdown-toggle')) {
         closeMenu();
-      } else {
-        event.preventDefault();
       }
     });
   });

@@ -98,6 +98,21 @@ nav.layout-navbar {
       @include media-breakpoint-down(lg) {
         .landing-nav-menu {
           background-color: var(--#{$prefix}paper-bg);
+
+          .navbar-nav .nav-item.dropdown {
+            float: none;
+            position: relative;
+
+            .dropdown-menu {
+              position: static;
+              inline-size: auto;
+              min-inline-size: 0;
+              margin-block: 0;
+              border: 0;
+              background: transparent;
+              box-shadow: none;
+            }
+          }
         }
       }
 
