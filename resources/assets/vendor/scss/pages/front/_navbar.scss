@@ -149,6 +149,48 @@ nav.layout-navbar {
               display: block;
             }
           }
+
+        }
+      }
+
+      @include media-breakpoint-down(sm) {
+        flex-wrap: nowrap;
+        padding-inline: .5rem !important;
+
+        .navbar-brand {
+          min-inline-size: 0;
+          margin-inline-end: .5rem !important;
+
+          .navbar-toggler {
+            margin-inline-end: .5rem !important;
+          }
+
+          .app-brand-link {
+            min-inline-size: 0;
+          }
+
+          .app-brand-text {
+            max-inline-size: 5rem;
+            overflow: hidden;
+            font-size: 1rem;
+            text-overflow: ellipsis;
+            margin-inline-start: .375rem !important;
+            padding-inline-start: 0 !important;
+          }
+        }
+
+        > .navbar-nav {
+          flex-shrink: 0;
+          gap: .25rem !important;
+        }
+
+        .dropdown-style-switcher .nav-link {
+          padding-inline: .25rem !important;
+        }
+
+        .btn-primary.btn-sm,
+        .btn-label-secondary.btn-sm {
+          padding-inline: .375rem !important;
         }
       }
     }

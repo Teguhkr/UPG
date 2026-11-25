@@ -31,6 +31,7 @@
     <li class="nav-item dropdown dropdown-style-switcher me-2">
       <a class="nav-link dropdown-toggle hide-arrow" id="nav-theme" href="javascript:void(0);" data-bs-toggle="dropdown">
         <i class="icon-base ti tabler-sun icon-md theme-icon-active"></i>
+        <span class="d-none ms-2" id="nav-theme-text">Toggle theme</span>
       </a>
       <ul class="dropdown-menu dropdown-menu-end">
         <li>

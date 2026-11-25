@@ -73,7 +73,8 @@ class UpgPortalTest extends TestCase
         $this->actingAs($admin)
             ->get('/admin')
             ->assertOk()
-            ->assertSee('dropdown-style-switcher');
+            ->assertSee('dropdown-style-switcher')
+            ->assertSee('nav-theme-text');
     }
 
     public function test_only_super_admins_can_access_user_management_and_site_settings(): void
