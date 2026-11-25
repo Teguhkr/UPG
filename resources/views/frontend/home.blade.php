@@ -1,6 +1,8 @@
 @php
   $pageConfigs = ['myLayout' => 'front'];
   $golUrl = $siteSettings['gol_url'] ?? 'https://gol.kpk.go.id';
+  use Illuminate\Support\Facades\Route;
+  $currentRouteName = Route::currentRouteName() ?? '';
 @endphp
 
 @extends('layouts/layoutMaster')
@@ -37,9 +39,9 @@
             {{ $siteSettings['hero_subtitle'] ?? 'Portal resmi Unit Pengendalian Gratifikasi (UPG) KKP sebagai pusat informasi, edukasi, konsultasi, dan pelaporan gratifikasi.' }}
           </p>
           <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-3">
-            <a href="{{ $golUrl }}" target="_blank" rel="noopener noreferrer"
+            <a href="{{ route('contact.index') }}" target="_blank" rel="noopener noreferrer"
               class="btn btn-primary btn-lg upg-gol-pulse shadow-sm">
-              <i class="icon-base ti tabler-send me-2"></i>Lapor Gratifikasi (GOL KPK)
+              <i class="icon-base ti tabler-send me-2"></i>Konsultasi Gratifikasi
             </a>
             <a href="{{ route('publikasi.mengenal') }}" class="btn btn-label-primary btn-lg">
               <i class="icon-base ti tabler-book me-2"></i>Mengenal Gratifikasi
