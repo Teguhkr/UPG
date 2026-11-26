@@ -161,6 +161,59 @@ class UpgPortalTest extends TestCase
         }
     }
 
+    public function test_article_detail_links_to_previous_and_next_published_articles(): void
+    {
+        $category = Category::where('type', 'article')->firstOrFail();
+        $slugPrefix = 'article-navigation-' . uniqid();
+
+        DB::beginTransaction();
+
+        try {
+            $previous = Article::create([
+                'category_id' => $category->id,
+                'title' => 'Artikel Navigasi Sebelumnya',
+                'slug' => "{$slugPrefix}-previous",
+                'content' => '<p>Konten.</p>',
+                'is_published' => true,
+                'published_at' => '2037-12-31 00:00:00',
+            ]);
+            $current = Article::create([
+                'category_id' => $category->id,
+                'title' => 'Artikel Navigasi Saat Ini',
+                'slug' => "{$slugPrefix}-current",
+                'content' => '<p>Konten.</p>',
+                'is_published' => true,
+                'published_at' => '2037-12-30 00:00:00',
+            ]);
+            $next = Article::create([
+                'category_id' => $category->id,
+                'title' => 'Artikel Navigasi Berikutnya',
+                'slug' => "{$slugPrefix}-next",
+                'content' => '<p>Konten.</p>',
+                'is_published' => true,
+                'published_at' => '2037-12-29 00:00:00',
+            ]);
+            Article::create([
+                'category_id' => $category->id,
+                'title' => 'Artikel Navigasi Belum Terbit',
+                'slug' => "{$slugPrefix}-unpublished",
+                'content' => '<p>Konten.</p>',
+                'is_published' => false,
+                'published_at' => '2037-12-31 12:00:00',
+            ]);
+
+            $this->get(route('articles.show', $current->slug))
+                ->assertOk()
+                ->assertSee('Sebelumnya')
+                ->assertSee('Berikutnya')
+                ->assertSee(route('articles.show', $previous->slug), false)
+                ->assertSee(route('articles.show', $next->slug), false)
+                ->assertDontSee('Artikel Navigasi Belum Terbit');
+        } finally {
+            DB::rollBack();
+        }
+    }
+
     public function test_faq_and_case_sort_order_shifts_cleanly_on_create_and_update(): void
     {
         $admin = User::where('username', 'adminupg')->firstOrFail();
@@ -236,4 +289,3 @@ class UpgPortalTest extends TestCase
         }
     }
 }
-

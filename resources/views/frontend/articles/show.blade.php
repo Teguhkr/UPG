@@ -41,6 +41,27 @@
             <div class="upg-prose">
               {!! $article->content !!}
             </div>
+
+            @if($previous || $next)
+              <nav aria-label="Navigasi artikel" class="d-flex justify-content-between gap-3 mt-6 pt-4 border-top">
+                <div>
+                  @if($previous)
+                    <a href="{{ route('articles.show', $previous->slug) }}" class="btn btn-label-primary">
+                      <i class="icon-base ti tabler-arrow-left me-1"></i>Sebelumnya
+                    </a>
+                    <div class="small text-body-secondary mt-2">{{ \Illuminate\Support\Str::limit($previous->title, 45) }}</div>
+                  @endif
+                </div>
+                <div class="text-end">
+                  @if($next)
+                    <a href="{{ route('articles.show', $next->slug) }}" class="btn btn-label-primary">
+                      Berikutnya<i class="icon-base ti tabler-arrow-right ms-1"></i>
+                    </a>
+                    <div class="small text-body-secondary mt-2">{{ \Illuminate\Support\Str::limit($next->title, 45) }}</div>
+                  @endif
+                </div>
+              </nav>
+            @endif
           </div>
         </div>
       </div>
